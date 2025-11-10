@@ -1,0 +1,15 @@
+{ config, pkgs, ... }:
+
+{
+  home.username = "llm";
+  home.homeDirectory = "/home/llm";
+
+  programs.home-manager.enable = true;
+
+  home.packages = with pkgs; [
+    git
+    htop
+    btop
+    curl
+  ];
+}
