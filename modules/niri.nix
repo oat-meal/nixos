@@ -1,69 +1,34 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 {
-  # Enable Niri Wayland compositor
+  # Enable Niri Wayland compositor support
   programs.niri.enable = true;
 
-  # Required tools for full Wayland session with XWayland support
+  # Install required environment tools for Wayland sessions
   environment.systemPackages = with pkgs; [
     niri
-    foot
-    mako
-    slurp
-    grim
-    wl-clipboard
-    wlr-randr
-    xdg-utils
     xwayland
-    xwayland-satellite # <-- Required for X11 apps under Niri
+    wl-clipboard
+    wayland-utils
+    xdg-utils
+    mako  # Wayland-compatible notification daemon
   ];
 
-  # Enable dbus and seatd (for Wayland session management)
+  # Enable core desktop services and interop with Wayland
   services.dbus.enable = true;
-  services.seatd.enable = true;
-
-  # Optional: use greetd to auto-login to Niri
-  services.greetd = {
-    enable = true;
-    settings = {
-      default_session = {
-        command = "niri";
-        user = "chris";
-      };
-    };
-  };
-
-  # Start xwayland-satellite as a user service
-  systemd.user.services.xwayland-satellite = {
-    Unit = {
-      Description = "xwayland-satellite for X11 under Wayland";
-      After = [ "graphical-session.target" ];
-    };
-
-    Service = {
-      ExecStart = "${pkgs.xwayland-satellite}/bin/xwayland-satellite";
-      Restart = "on-failure";
-    };
-
-    Install = {
-      WantedBy = [ "default.target" ];
-    };
-  };
-
-  # Let home-manager start user services
-  home-manager.users.chris = {
-    systemd.user.startServices = true;
-  };
-
-  # Input support
   services.libinput.enable = true;
 
-  # Environment for Wayland-native apps
-  environment.sessionVariables = {
-    XDG_SESSION_TYPE = "wayland";
-    XDG_CURRENT_DESKTOP = "niri";
-    MOZ_ENABLE_WAYLAND = "1";
-    QT_QPA_PLATFORM = "wayland";
-    SDL_VIDEODRIVER = "wayland";
+  xdg.portal.enable = true;
+  xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-wlr ];
+
+  # Keyring support for GNOME-style secrets and GPG
+  services.gnome.gnome-keyring.enable = true;
+
+  # Optional login manager using greetd with TUI frontend
+  services.greetd = {
+    enable = true;
+    settings.default_session.command = ''
+      ${pkgs.greetd.tuigreet}/bin/tuigreet --cmd niri
+    '';
   };
 }
