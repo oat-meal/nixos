@@ -1,5 +1,6 @@
 { config, pkgs, ... }:
-
+  # Enable unfree software - prevents build issues 
+  nixpkgs.config.allowUnfree = true;
 {
   # Specify the default NixOS release for compatibility
   system.stateVersion = "25.05";
