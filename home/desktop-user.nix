@@ -25,6 +25,7 @@
   services.gpg-agent = {
     enable = true;
     pinentryPackage = pkgs.pinentry-gtk2;
+    # Optionally, add extraConfig, SSH support, etc.
   };
 
   # User-level packages managed via Home Manager
