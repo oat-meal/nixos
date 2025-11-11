@@ -22,7 +22,7 @@
   };
 
   # Enable GPG agent with GTK-based pin entry
-  programs.gnupg.agent = {
+  services.gpg-agent = {
     enable = true;
     pinentryPackage = pkgs.pinentry-gtk2;
   };
@@ -30,6 +30,7 @@
   # User-level packages managed via Home Manager
   home.packages = with pkgs; [
     firefox
+    brave
     unzip
     htop
     ripgrep
