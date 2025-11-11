@@ -9,7 +9,7 @@
   };
 
   # Enable 32-bit OpenGL support required for Proton and older games
-  hardware.opengl = {
+  hardware.graphics = {
     enable = true;
     extraPackages = with pkgs; [ vaapiVdpau libvdpau-va-gl ];
   };
