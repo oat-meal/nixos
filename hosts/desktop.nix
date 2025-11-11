@@ -1,7 +1,5 @@
 { config, pkgs, ... }:
-  # Enable unfree software - prevents build issues 
-  nixpkgs.config.allowUnfree = true;
-{
+
   # Specify the default NixOS release for compatibility
   system.stateVersion = "25.05";
 
@@ -27,6 +25,9 @@
     device = "/dev/disk/by-label/boot";
     fsType = "vfat";
   };
+
+  # Enable unfree software - prevents build issues 
+  nixpkgs.config.allowUnfree = true;
 
   # Enable and manage network via NetworkManager
   networking.hostName = "desktop-nixos";
