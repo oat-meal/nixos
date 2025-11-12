@@ -23,47 +23,43 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  ########################################
-  ## Filesystem Configuration
-  ########################################
-  # EFI partition: /dev/nvme2n1p1 (FAT32, 2GiB, flags boot,esp)
-  # Root partition: /dev/nvme2n1p2 (Btrfs with subvols @, @home, @nix, @log, @swap)
+ ########################################
+ ## Filesystem Configuration (Final)
+ ########################################
 
-  fileSystems = {
-    "/" = {
-      device = "UUID=8ea2530c-aaee-4a0f-a1f4-0eed4c3ab74a";
-      fsType = "btrfs";
-      options = [ "subvol=@" ];
-    };
+ fileSystems."/" = {
+  device = "UUID=547e9d27-e12b-48a7-a60c-291faf37587c";
+  fsType = "btrfs";
+  options = [ "subvol=@" ];
+ };
 
-    "/boot" = {
-      device = "UUID=025C-FCOD";
-      fsType = "vfat";
-    };
+ fileSystems."/boot" = {
+  device = "UUID=4BE5-47A3";
+  fsType = "vfat";
+ };
 
-    "/home" = {
-      device = "UUID=8ea2530c-aaee-4a0f-a1f4-0eed4c3ab74a";
-      fsType = "btrfs";
-      options = [ "subvol=@home" ];
-    };
+ fileSystems."/home" = {
+  device = "UUID=547e9d27-e12b-48a7-a60c-291faf37587c";
+  fsType = "btrfs";
+  options = [ "subvol=@home" ];
+ };
 
-    "/nix" = {
-      device = "UUID=8ea2530c-aaee-4a0f-a1f4-0eed4c3ab74a";
-      fsType = "btrfs";
-      options = [ "subvol=@nix" ];
-    };
+ fileSystems."/nix" = {
+  device = "UUID=547e9d27-e12b-48a7-a60c-291faf37587c";
+  fsType = "btrfs";
+  options = [ "subvol=@nix" ];
+ };
 
-    "/var/log" = {
-      device = "UUID=8ea2530c-aaee-4a0f-a1f4-0eed4c3ab74a";
-      fsType = "btrfs";
-      options = [ "subvol=@log" ];
-    };
-  };
+ fileSystems."/var/log" = {
+  device = "UUID=547e9d27-e12b-48a7-a60c-291faf37587c";
+  fsType = "btrfs";
+  options = [ "subvol=@log" ];
+ };
 
-  # Swap file will live on /swap/swapfile (inside subvol=@swap)
-  swapDevices = [
-    { file = "/swap/swapfile"; }
-  ];
+# Optional — if you want your swap file on the @swap subvolume
+# swapDevices = [
+#  { file = "/swap/swapfile"; }
+# ];
 
   ########################################
   ## Hostname & Networking
