@@ -70,6 +70,34 @@
 # ];
 
   ########################################
+  ## Storage Pool (Btrfs RAID: NVME_Pool)
+  ########################################
+
+  # Mount the main storage pool at /storage
+  fileSystems."/storage" = {
+  device = "UUID=5462bbac-d14a-4189-8ca8-aa07cd026c86";
+  fsType = "btrfs";
+  options = [ "rw" "ssd" "relatime" "space_cache=v2" "compress=zstd" "subvol=/" ];
+  };
+
+  ########################################
+  ## Session Environment (Wayland + XWayland)
+  ########################################
+  # These environment variables make sure legacy X11 apps (Steam, etc.)
+  # can connect properly under Wayland and that greetd launches a full
+  # user session with access to the GPU and input devices.
+
+  environment.sessionVariables = {
+  XDG_SESSION_TYPE = "wayland";
+  XDG_CURRENT_DESKTOP = "niri";
+  LIBSEAT_BACKEND = "logind";  # Critical for greetd to start Wayland compositors
+  XDG_RUNTIME_DIR = "/run/user/1000";  # UID for user chris (check with `id chris`)
+  SDL_VIDEODRIVER = "wayland";
+  STEAM_DISABLE_GPU_SANDBOX = "1";
+ };
+
+
+  ########################################
   ## Hostname & Networking
   ########################################
 
@@ -100,6 +128,17 @@
 
   hardware.enableRedistributableFirmware = true;
 
+ ########################################
+ ## Fonts
+ ########################################
+
+fonts = {
+  packages = with pkgs; [
+    nerd-fonts.jetbrains-mono
+  ];
+};
+
+
   ########################################
   ## Global Packages
   ########################################
@@ -107,7 +146,13 @@
   environment.systemPackages = with pkgs; [
     git
     wget
+    yazi
     curl
+    fuzzel
+    xorg.libXcursor
+    xorg.libX11
+    xorg.libXrandr
+    bibata-cursors
     btrfs-progs
     zsh
     neovim
@@ -115,5 +160,7 @@
     pciutils
     usbutils
     lsb-release
+    xwayland
+    xwayland-satellite
   ];
 }
