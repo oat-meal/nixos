@@ -23,12 +23,14 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
- ########################################
- ## Filesystem Configuration (Final)
- ########################################
+  ########################################
+  ## Filesystem Configuration
+  ########################################
+  # EFI partition: /dev/nvme2n1p1 (FAT32, 2GiB, flags boot,esp)
+  # Root partition: /dev/nvme2n1p2 (Btrfs with subvols @, @home, @nix, @log, @swap)
 
- fileSystems."/" = {
-  device = "UUID=547e9d27-e12b-48a7-a60c-291faf37587c";
+  fileSystems."/" = {
+  device = "UUID=547e9d27-e12b-48a7-a60c-291ef37587ec";
   fsType = "btrfs";
   options = [ "subvol=@" ];
  };
@@ -39,26 +41,32 @@
  };
 
  fileSystems."/home" = {
-  device = "UUID=547e9d27-e12b-48a7-a60c-291faf37587c";
+  device = "UUID=547e9d27-e12b-48a7-a60c-291ef37587ec";
   fsType = "btrfs";
   options = [ "subvol=@home" ];
  };
 
  fileSystems."/nix" = {
-  device = "UUID=547e9d27-e12b-48a7-a60c-291faf37587c";
+  device = "UUID=547e9d27-e12b-48a7-a60c-291ef37587ec";
   fsType = "btrfs";
   options = [ "subvol=@nix" ];
  };
 
  fileSystems."/var/log" = {
-  device = "UUID=547e9d27-e12b-48a7-a60c-291faf37587c";
+  device = "UUID=547e9d27-e12b-48a7-a60c-291ef37587ec";
   fsType = "btrfs";
   options = [ "subvol=@log" ];
  };
 
-# Optional — if you want your swap file on the @swap subvolume
-# swapDevices = [
-#  { file = "/swap/swapfile"; }
+ fileSystems."/swap" = {
+  device = "UUID=547e9d27-e12b-48a7-a60c-291ef37587ec";
+  fsType = "btrfs";
+  options = [ "subvol=@swap" ];
+};
+
+#  Optional — if you want your swap file on the @swap subvolume
+#  swapDevices = [
+#   { file = "/swap/swapfile"; }
 # ];
 
   ########################################
@@ -67,6 +75,8 @@
 
   networking.hostName = "desktop-nixos";
   networking.networkmanager.enable = true;
+  # for build error - fix and remove later
+  services.logrotate.enable = false;
 
   ########################################
   ## User Configuration
