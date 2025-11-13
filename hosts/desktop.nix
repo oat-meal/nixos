@@ -81,21 +81,19 @@
   };
 
   ########################################
-  ## Session Environment (Wayland + XWayland)
+  ## Environment Variables (GLOBAL)
   ########################################
-  # These environment variables make sure legacy X11 apps (Steam, etc.)
-  # can connect properly under Wayland and that greetd launches a full
-  # user session with access to the GPU and input devices.
+  ## These must be here. They ensure:
+  ## - greetd passes correct env to Niri
+  ## - Niri passes correct env to Xwayland
+  ## - Steam sees both X11 + Wayland backends
+  ## - NO manual DISPLAY overrides (!!)
 
   environment.sessionVariables = {
-  XDG_SESSION_TYPE = "wayland";
-  XDG_CURRENT_DESKTOP = "niri";
-  LIBSEAT_BACKEND = "logind";  # Critical for greetd to start Wayland compositors
-  XDG_RUNTIME_DIR = "/run/user/1000";  # UID for user chris (check with `id chris`)
-  SDL_VIDEODRIVER = "wayland";
-  STEAM_DISABLE_GPU_SANDBOX = "1";
- };
-
+    XDG_SESSION_TYPE = "wayland";
+    XDG_CURRENT_DESKTOP = "niri";
+    SDL_VIDEODRIVER = "wayland";
+  };
 
   ########################################
   ## Hostname & Networking
@@ -162,5 +160,24 @@ fonts = {
     lsb-release
     xwayland
     xwayland-satellite
+    #testing
+    libpulseaudio
+    libudev0-shim
+    alsa-lib
+    alsa-plugins
+    ffmpeg
+    libGL
+    libdrm
+    libxkbcommon
+    vulkan-loader
+    vulkan-tools
+    vulkan-validation-layers
+    wayland
+    xorg.libX11
+    xorg.libXrandr
+    xorg.libxcb
+    xorg.libXext
+    glib
+    gtk3
   ];
 }
